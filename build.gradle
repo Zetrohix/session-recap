@@ -3,7 +3,7 @@ plugins {
 }
 
 base {
-	archivesName = "where-was-i"
+	archivesName = "session-recap"
 }
 
 dependencies {
@@ -34,6 +34,6 @@ tasks.withType(JavaCompile).configureEach {
 
 jar {
 	from("LICENSE") {
-		rename { "${it}_where-was-i" }
+		rename { "${it}_session-recap" }
 	}
 }

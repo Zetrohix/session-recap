@@ -76,7 +76,7 @@ public final class Recap {
 	}
 
 	private static Component header() {
-		return Component.literal(" Where Was I? ").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD);
+		return Component.literal(" Session Recap ").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD);
 	}
 
 	private static MutableComponent line(String label, ChatFormatting color) {
