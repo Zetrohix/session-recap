@@ -1,0 +1,14 @@
+{
+	"required": true,
+	"package": "com.wherewasi.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"BlockItemMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}

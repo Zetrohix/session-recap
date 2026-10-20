@@ -1,0 +1,27 @@
+{
+	"schemaVersion": 1,
+	"id": "wherewasi",
+	"version": "${version}",
+	"name": "Where Was I?",
+	"description": "A client-side fabric mod that recaps your last session in a world: where you logged off, your last death, what you mined and built, and a note to yourself.",
+	"authors": [
+		"Zetrohix"
+	],
+	"license": "MIT",
+	"icon": "assets/wherewasi/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"com.wherewasi.WhereWasI"
+		]
+	},
+	"mixins": [
+		"wherewasi.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.3",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}
