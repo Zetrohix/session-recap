@@ -8,7 +8,7 @@ A client-side fabric mod that recaps your last session in a world: where you log
 - how far you travelled
 - a note you left yourself with `/wherewasi note <text>`
 
-Commands: `/wherewasi` (show the recap again), `/wherewasi note [text]`, `/wherewasi clearnote`.
+Commands: `/wherewasi` (show the recap again), `/wherewasi note [text]`, `/wherewasi clearnote`, `/wherewasi auto on|off`. `/sessionrecap` works as another name for `/wherewasi`, so `/sessionrecap note <text>` and the rest work too.
 
 ## FAQ
 
@@ -42,4 +42,4 @@ It is close, but not fully exact since the mod is fully client-sided. A laggy se
 
 ### Can I turn off the automatic recap?
 
-Not yet. If you would like for this to be added, open an issue.
+Yes. Run `/wherewasi auto off` and the recap will no longer show up when you join. Your sessions are still tracked, so you can type `/wherewasi` to see the recap whenever you want. Run `/wherewasi auto on` to turn it back on, or `/wherewasi auto` to check the current setting.

@@ -72,10 +72,11 @@ public final class SessionTracker {
 			return;
 		}
 
-		// Show the recap once the player actually exists in the world.
 		if (recapPending) {
 			recapPending = false;
-			player.sendSystemMessage(Recap.build(previous, player));
+			if (Settings.autoRecap()) {
+				player.sendSystemMessage(Recap.build(previous, player));
+			}
 		}
 
 		double px = player.getX(), pz = player.getZ();
@@ -96,7 +97,6 @@ public final class SessionTracker {
 		current.lastSeen = System.currentTimeMillis();
 		current.sessionMillis = current.lastSeen - sessionStart;
 
-		// Periodic save so a crash doesn't lose the session.
 		if (++ticksSinceSave >= SAVE_INTERVAL_TICKS) {
 			ticksSinceSave = 0;
 			save();
@@ -190,10 +190,6 @@ public final class SessionTracker {
 		}
 	}
 
-	/**
-	 * A quick hop in and out (say, to tweak settings) shouldn't wipe the recap of
-	 * the last real session, so short idle sessions keep the previous stats.
-	 */
 	private static SessionRecord recordToSave() {
 		boolean idle = current.mined.isEmpty() && current.placed.isEmpty();
 		if (previous == null || !idle || current.sessionMillis >= SHORT_SESSION_MILLIS) {

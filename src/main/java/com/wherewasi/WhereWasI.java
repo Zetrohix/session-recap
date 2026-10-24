@@ -1,6 +1,8 @@
 package com.wherewasi;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -30,15 +32,30 @@ public class WhereWasI implements ClientModInitializer {
 				SessionTracker.onDeath(client.player);
 			}
 		});
-		ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> dispatcher.register(
-			ClientCommands.literal("wherewasi")
+		ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
+			LiteralCommandNode<FabricClientCommandSource> root = dispatcher.register(commandTree());
+			// alias, redirect only forwards subcommands so the bare one needs its own executes
+			dispatcher.register(ClientCommands.literal("sessionrecap")
 				.executes(ctx -> showRecap(ctx.getSource()))
-				.then(ClientCommands.literal("note")
-					.executes(ctx -> showNote(ctx.getSource()))
-					.then(ClientCommands.argument("text", StringArgumentType.greedyString())
-						.executes(ctx -> setNote(ctx.getSource(), StringArgumentType.getString(ctx, "text")))))
-				.then(ClientCommands.literal("clearnote")
-					.executes(ctx -> setNote(ctx.getSource(), null)))));
+				.redirect(root));
+		});
+	}
+
+	private static LiteralArgumentBuilder<FabricClientCommandSource> commandTree() {
+		return ClientCommands.literal("wherewasi")
+			.executes(ctx -> showRecap(ctx.getSource()))
+			.then(ClientCommands.literal("note")
+				.executes(ctx -> showNote(ctx.getSource()))
+				.then(ClientCommands.argument("text", StringArgumentType.greedyString())
+					.executes(ctx -> setNote(ctx.getSource(), StringArgumentType.getString(ctx, "text")))))
+			.then(ClientCommands.literal("clearnote")
+				.executes(ctx -> setNote(ctx.getSource(), null)))
+			.then(ClientCommands.literal("auto")
+				.executes(ctx -> showAuto(ctx.getSource()))
+				.then(ClientCommands.literal("on")
+					.executes(ctx -> setAuto(ctx.getSource(), true)))
+				.then(ClientCommands.literal("off")
+					.executes(ctx -> setAuto(ctx.getSource(), false))));
 	}
 
 	private static int showRecap(FabricClientCommandSource source) {
@@ -60,6 +77,21 @@ public class WhereWasI implements ClientModInitializer {
 		}
 		SessionTracker.setNote(note);
 		source.sendFeedback(Component.literal(note == null ? "Note cleared." : "Saved. I'll remind you next time you join.")
+			.withStyle(ChatFormatting.GREEN));
+		return 1;
+	}
+
+	private static int showAuto(FabricClientCommandSource source) {
+		source.sendFeedback(Component.literal("Recap on join is " + (Settings.autoRecap() ? "on" : "off")
+			+ ". Use /wherewasi auto on|off").withStyle(ChatFormatting.GRAY));
+		return 1;
+	}
+
+	private static int setAuto(FabricClientCommandSource source, boolean on) {
+		Settings.setAutoRecap(on);
+		source.sendFeedback(Component.literal(on
+			? "Recap on join turned on."
+			: "Recap on join turned off. Type /wherewasi to see it any time.")
 			.withStyle(ChatFormatting.GREEN));
 		return 1;
 	}
